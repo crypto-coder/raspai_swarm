@@ -1,0 +1,284 @@
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    k8s-app: aiagent01
+  name: aiagent01
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: aiagent01
+  template:
+    metadata:
+      labels:
+        k8s-app: aiagent01
+    spec:
+      containers:
+      - name: aiagent01
+        image: registry.cc.local/coincatcher/aiagent-llama:latest
+        env:
+          - name: MODEL
+            value: "/app/models/openchat_3.5/openchat_3.5.Q4_K_M.gguf"
+          - name: MODELS_PATH
+            value: "/app/models"
+          - name: HOST
+            value: "0.0.0.0"
+          - name: PORT
+            value: "8080"
+        ports:
+          - containerPort: 8080
+            name: aiagent-main
+            protocol: TCP
+        volumeMounts:
+        - name: agent-models
+          mountPath: /app/models    
+        resources:
+          limits:
+            memory: 7500Mi
+          requests:
+            memory: 7500Mi
+      nodeSelector:
+        aiunit: agent1compute
+      imagePullSecrets:
+      - name: registrykey
+      volumes:
+      - name: agent-models
+        persistentVolumeClaim:
+          claimName: agent1-models-pvc
+
+---
+
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    k8s-app: aiagent02
+  name: aiagent02
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: aiagent02
+  template:
+    metadata:
+      labels:
+        k8s-app: aiagent02
+    spec:
+      containers:
+      - name: aiagent02
+        image: registry.cc.local/coincatcher/aiagent-llama:latest
+        env:
+          - name: MODEL
+            value: "/app/models/dolphin-2.1-mistral-7b/dolphin-2.1-mistral-7b.Q4_K_M.gguf"
+          - name: MODELS_PATH
+            value: "/app/models"
+          - name: HOST
+            value: "0.0.0.0"
+          - name: PORT
+            value: "8080"
+        ports:
+          - containerPort: 8080
+            name: aiagent-main
+            protocol: TCP
+        volumeMounts:
+        - name: agent-models
+          mountPath: /app/models    
+        resources:
+          limits:
+            memory: 7500Mi
+          requests:
+            memory: 7500Mi
+      nodeSelector:
+        aiunit: agent2compute
+      imagePullSecrets:
+      - name: registrykey
+      volumes:
+      - name: agent-models
+        persistentVolumeClaim:
+          claimName: agent2-models-pvc
+
+---
+
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    k8s-app: aiagent03
+  name: aiagent03
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: aiagent03
+  template:
+    metadata:
+      labels:
+        k8s-app: aiagent03
+    spec:
+      containers:
+      - name: aiagent03
+        image: registry.cc.local/coincatcher/aiagent-llama:latest
+        env:
+          - name: MODEL
+            value: "/app/models/orca-2-7b/orca-2-7b.Q4_K_M.gguf"
+          - name: MODELS_PATH
+            value: "/app/models"
+          - name: HOST
+            value: "0.0.0.0"
+          - name: PORT
+            value: "8080"
+        ports:
+          - containerPort: 8080
+            name: aiagent-main
+            protocol: TCP
+        volumeMounts:
+        - name: agent-models
+          mountPath: /app/models    
+        resources:
+          limits:
+            memory: 7500Mi
+          requests:
+            memory: 7500Mi
+      nodeSelector:
+        aiunit: agent3compute
+      imagePullSecrets:
+      - name: registrykey
+      volumes:
+      - name: agent-models
+        persistentVolumeClaim:
+          claimName: agent3-models-pvc
+      
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    k8s-app: aiagent04
+  name: aiagent04
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: aiagent04
+  template:
+    metadata:
+      labels:
+        k8s-app: aiagent04
+    spec:
+      containers:
+      - name: aiagent04
+        image: registry.cc.local/coincatcher/aiagent-llama:latest
+        env:
+          - name: MODEL
+            value: "/app/models/neural-chat-7b-v3-1/neural-chat-7b-v3-1.Q4_K_M.gguf"
+          - name: MODELS_PATH
+            value: "/app/models"
+          - name: HOST
+            value: "0.0.0.0"
+          - name: PORT
+            value: "8080"
+        ports:
+          - containerPort: 8080
+            name: aiagent-main
+            protocol: TCP
+        volumeMounts:
+        - name: agent-models
+          mountPath: /app/models    
+        resources:
+          limits:
+            memory: 7500Mi
+          requests:
+            memory: 7500Mi
+      nodeSelector:
+        aiunit: agent4compute
+      imagePullSecrets:
+      - name: registrykey
+      volumes:
+      - name: agent-models
+        persistentVolumeClaim:
+          claimName: agent4-models-pvc
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: aiagent01
+  name: aiagent01
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    k8s-app: aiagent01
+  ports:
+  - name: aiagent01-service
+    protocol: TCP
+    port: 9080
+    targetPort: aiagent-main
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: aiagent02
+  name: aiagent02
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    k8s-app: aiagent02
+  ports:
+  - name: aiagent02-service
+    protocol: TCP
+    port: 9080
+    targetPort: aiagent-main
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: aiagent03
+  name: aiagent03
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    k8s-app: aiagent03
+  ports:
+  - name: aiagent03-service
+    protocol: TCP
+    port: 9080
+    targetPort: aiagent-main
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: aiagent04
+  name: aiagent04
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    k8s-app: aiagent04
+  ports:
+  - name: aiagent04-service
+    protocol: TCP
+    port: 9080
+    targetPort: aiagent-main

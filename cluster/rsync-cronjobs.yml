@@ -1,0 +1,142 @@
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rsync01
+spec:
+  schedule: "30 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: rsync-01-to-02
+            image: registry.cc.local/coincatcher/lifeboat:latest
+            imagePullPolicy: Always
+            command:
+            - /bin/sh
+            - -c
+            - rsync -vurt --progress --ignore-existing /aiagent01-models/ /aiagent02-models/
+            volumeMounts:
+            - name: aiagent01-models
+              mountPath: /aiagent01-models
+            - name: aiagent02-models
+              mountPath: /aiagent02-models
+          restartPolicy: OnFailure
+          volumes:
+          - name: aiagent01-models
+            persistentVolumeClaim:
+              claimName: aiagent01-models-pvc
+          - name: aiagent02-models
+            persistentVolumeClaim:
+              claimName: aiagent02-models-pvc
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rsync02
+spec:
+  schedule: "0 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: rsync-02-to-03
+            image: registry.cc.local/coincatcher/lifeboat:latest
+            imagePullPolicy: Always
+            command:
+            - /bin/sh
+            - -c
+            - rsync -vurt --progress --ignore-existing /aiagent02-models/ /aiagent03-models/
+            volumeMounts:
+            - name: aiagent02-models
+              mountPath: /aiagent02-models
+            - name: aiagent03-models
+              mountPath: /aiagent03-models
+          restartPolicy: OnFailure
+          volumes:
+          - name: aiagent02-models
+            persistentVolumeClaim:
+              claimName: aiagent02-models-pvc
+          - name: aiagent03-models
+            persistentVolumeClaim:
+              claimName: aiagent03-models-pvc
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rsync03
+spec:
+  schedule: "30 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: rsync-03-to-04
+            image: registry.cc.local/coincatcher/lifeboat:latest
+            imagePullPolicy: Always
+            command:
+            - /bin/sh
+            - -c
+            - rsync -vurt --progress --ignore-existing /aiagent03-models/ /aiagent04-models/
+            volumeMounts:
+            - name: aiagent03-models
+              mountPath: /aiagent03-models
+            - name: aiagent04-models
+              mountPath: /aiagent04-models
+          restartPolicy: OnFailure
+          volumes:
+          - name: aiagent03-models
+            persistentVolumeClaim:
+              claimName: aiagent03-models-pvc
+          - name: aiagent04-models
+            persistentVolumeClaim:
+              claimName: aiagent04-models-pvc
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rsync04
+spec:
+  schedule: "0 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: rsync-04-to-01
+            image: registry.cc.local/coincatcher/lifeboat:latest
+            imagePullPolicy: Always
+            command:
+            - /bin/sh
+            - -c
+            - rsync -vurt --progress --ignore-existing /aiagent04-models/ /aiagent01-models/
+            volumeMounts:
+            - name: aiagent04-models
+              mountPath: /aiagent04-models
+            - name: aiagent01-models
+              mountPath: /aiagent01-models
+          restartPolicy: OnFailure
+          volumes:
+          - name: aiagent04-models
+            persistentVolumeClaim:
+              claimName: aiagent04-models-pvc
+          - name: aiagent01-models
+            persistentVolumeClaim:
+              claimName: aiagent01-models-pvc

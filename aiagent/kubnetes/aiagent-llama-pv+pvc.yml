@@ -1,0 +1,167 @@
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: agent1-models
+  namespace: default
+spec:
+  capacity:
+    storage: 400Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /storage/models
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - c01w08
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: agent2-models
+  namespace: default
+spec:
+  capacity:
+    storage: 400Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /storage/models
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - c01w10
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: agent3-models
+  namespace: default
+spec:
+  capacity:
+    storage: 400Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /storage/models
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - c01w11
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: agent4-models
+  namespace: default
+spec:
+  capacity:
+    storage: 400Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /storage/models
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - c01w12
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agent1-models-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 400Gi
+  storageClassName: local-storage
+  volumeMode: Filesystem
+  volumeName: agent1-models
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agent2-models-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 400Gi
+  storageClassName: local-storage
+  volumeMode: Filesystem
+  volumeName: agent2-models
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agent3-models-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 400Gi
+  storageClassName: local-storage
+  volumeMode: Filesystem
+  volumeName: agent3-models
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agent4-models-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 400Gi
+  storageClassName: local-storage
+  volumeMode: Filesystem
+  volumeName: agent4-models

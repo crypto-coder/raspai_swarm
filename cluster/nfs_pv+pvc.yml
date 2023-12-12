@@ -1,0 +1,138 @@
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aiagent01-models-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 400Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storage
+  nfs:
+    server: c01w08
+    path: "/storage/models"
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aiagent02-models-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 400Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storage
+  nfs:
+    server: c01w10
+    path: "/storage/models"
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aiagent03-models-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 400Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storage
+  nfs:
+    server: c01w11
+    path: "/storage/models"
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aiagent04-models-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 400Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storage
+  nfs:
+    server: c01w12
+    path: "/storage/models"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aiagent01-models-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 400Gi
+  storageClassName: nfs-storage
+  volumeMode: Filesystem
+  volumeName: aiagent01-models-pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aiagent02-models-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 400Gi
+  storageClassName: nfs-storage
+  volumeMode: Filesystem
+  volumeName: aiagent02-models-pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aiagent03-models-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 400Gi
+  storageClassName: nfs-storage
+  volumeMode: Filesystem
+  volumeName: aiagent03-models-pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aiagent04-models-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 400Gi
+  storageClassName: nfs-storage
+  volumeMode: Filesystem
+  volumeName: aiagent04-models-pv

@@ -1,0 +1,89 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: aiagent01
+  name: aiagent01
+  namespace: default
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: aiagent01.cc.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: aiagent01
+            port:
+              number: 9080
+        path: /
+        pathType: Prefix
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: aiagent02
+  name: aiagent02
+  namespace: default
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: aiagent02.cc.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: aiagent02
+            port:
+              number: 9080
+        path: /
+        pathType: Prefix
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: aiagent03
+  name: aiagent03
+  namespace: default
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: aiagent03.cc.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: aiagent03
+            port:
+              number: 9080
+        path: /
+        pathType: Prefix
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: aiagent04
+  name: aiagent04
+  namespace: default
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: aiagent04.cc.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: aiagent04
+            port:
+              number: 9080
+        path: /
+        pathType: Prefix
