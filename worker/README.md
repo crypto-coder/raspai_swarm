@@ -134,6 +134,13 @@ To etch the microSD card, and do all the post-install setup, your command would 
 If you only want to update configs (not re-etch the microSD), then do not add the final `writeSD` argument.
 > ./setup.sh blade02 10.0.0.11
 
+==There is a chance that netplan will not correctly apply the IP address on first boot.  You can see this when you ssh into the device; there will be 2 IPv4 addresses bound to eth0. (or when you run `hostname -I` or `ip a`)==
+To correct this, you will need to edit the netplan config file:
+> sudo nano /etc/netplan/50-cloud-init.yaml
+> CHANGE THE IP ADDRESS TO THE CORRECT ONE
+> sudo netplan apply
+> sudo shutdown -r now
+
 ## Moving the `root` partition to the SSD
 The microSD card you used is flimsy and not reliable.  You will find that these cards will fail after significant read-write workloads.  And they are generally just slower to use than an SSD over USB3.  We will drastically improve our system by moving the `root` partition over to the SSD.
 
@@ -176,6 +183,8 @@ Now that the disk has been erased (we deleted all partitions and overwrote the d
 **3. Copy the `root` partition from the microSD over to the USB SSD**
 This step could take a while (30 mins?), because microSD cards are slow and we are moving several gigabytes of data. To copy the data, run the following:
 > sudo dd if=/dev/mmcblk0p2 of=/dev/sda bs=1M status=progress
+> sudo e2fsck -ycv /dev/sda         # check and repair any issues with the filesystem
+> sudo resize2fs /dev/sda          # grow the filesystem to use the entire disk
 
 **4. Mark the USB SSD with a device label**
 We use labels on devices so the RasPi can find them more easily during bootup.  To add a label, run the following:
@@ -188,6 +197,8 @@ By default, the `root` partition wants to use a device that has been marked with
 
 After you switch the device to use for `root`, your `/etc/fstab` should look like this
 ![fstab from RasPi](../docs/fstab_raspi_move_root.png)
+
+You may need to comment out (add a # at the beginning of the line) an entry that starts with `/dev/sda1`.  This line is the old mount point for the NFS share, so we will need to correct this folders permissions.
 
 ==To save your changes in Nano, press `Ctrl+o`, and to exit Nano, press `Ctrl+x`==
 
@@ -205,6 +216,8 @@ After a few minutes, the RasPi will appear on the network again, and you can SSH
 
 Example result from running `df -h`
 ![df raspi result](../docs/df_raspi_result.png)
+
+
 
 
 ## EXPERIMENTAL: Adding a swap partition

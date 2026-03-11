@@ -1,0 +1,50 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    k8s-app: lifeboat
+  name: lifeboat
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: lifeboat
+  template:
+    metadata:
+      labels:
+        k8s-app: lifeboat
+    spec:
+      containers:
+      - name: lifeboat
+        image: registry.cc.local/coincatcher/lifeboat:latest
+        command: ["sh", "-c", "--"]
+        args: ["sleep 50000"]
+        env:
+          - name: MODEL
+            value: "/app/models/openchat_3.5/openchat_3.5.Q4_K_M.gguf"
+          - name: MODELS_PATH
+            value: "/app/models"
+          - name: HOST
+            value: "0.0.0.0"
+          - name: PORT
+            value: "8080"
+        ports:
+          - containerPort: 8080
+            name: lifeboat-main
+            protocol: TCP
+        # volumeMounts:
+        # - name: lifeboat-storage
+        #   mountPath: /storage  
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 7500Mi
+          requests:
+            memory: 7500Mi
+      imagePullSecrets:
+      - name: registrykey
+      # volumes:
+      # - name: lifeboat-storage
+      #   persistentVolumeClaim:
+      #     claimName: agent1-chats-pvc

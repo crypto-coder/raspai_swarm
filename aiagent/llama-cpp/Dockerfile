@@ -24,7 +24,7 @@ RUN git clone --recurse-submodules https://github.com/abetlen/llama-cpp-python.g
 
 # Build llama-cpp-python and its dependencies
 RUN python3 -m pip install --upgrade pip
-RUN make deps && make build
+RUN make deps && make build LLAMA_CUBLAS=1
 
 # Make sure the AI model can be locked in memory
 RUN echo "Checking ulimit during build"

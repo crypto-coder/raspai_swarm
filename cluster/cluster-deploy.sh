@@ -20,7 +20,7 @@ deployBlade() {
         sleep 150s
     else
         #k3sup join --ip $IP_ADDRESS --server-ip $CLUSTER_MASTER_IP_ADDRESS --user clusteradm --k3s-channel stable --k3s-extra-args '--disable=traefik --disable=servicelb'
-        k3sup join --ip $IP_ADDRESS --server-ip $CLUSTER_MASTER_IP_ADDRESS --user clusteradm --server-user clusteradm
+        k3sup join --ip $IP_ADDRESS --server-ip $CLUSTER_MASTER_IP_ADDRESS --user clusteradm --server-user clusteradm --k3s-version v1.27.7+k3s2
     fi
 
     # Check if we are attempting to format the /dev/sda device

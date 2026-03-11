@@ -152,7 +152,7 @@ fi
 # Create the static IP Address for this device
 # Update the netplan network configuration to include the static ip address
 STATIC_IP_ALREADY_SET=$(sudo yq e '.network.ethernets.eth0.addresses' boot/network-config )
-if [ "$STATIC_IP_ALREADY_SET" = "null" ]; then
+if [ "$STATIC_IP_ALREADY_SET" = "- 10.0.1.10/24" ]; then
 	echo "------ Setting the static IP Address to : " $IP_ADDRESS_TO_REGISTER
 
 	sudo yq e -i '.network.ethernets.eth0.addresses[0] = "'$IP_ADDRESS_TO_REGISTER'/24"' boot/network-config 

@@ -1,7 +1,7 @@
 
 ## Overview
 
-Guide for deploying Kubernetes (K3s) on a cluster of Rasberry Pi's.  We include a series of scripts for maintenance and fixing various issues.  This guide will describe how to setup Helm, Tiller, Prometheus, Grafana, and Docker Registry. In the end, we will have a deployment, similar to this diagram:
+Guide for deploying Kubernetes (K3s) on a cluster of Rasberry Pi's.  We include a series of scripts for maintenance and fixing various issues.  This guide will describe how to setup Helm, Tiller, Prometheus, Grafana, Kubeflow, and Docker Registry. In the end, we will have a deployment, similar to this diagram:
 
 ![Cluster components](../docs/cluster_components.png)
 
@@ -41,6 +41,14 @@ Scripts for small fixes
    ==IP addresses for worker nodes are hard-coded in this script to use the `10.0.1.0/24` network.==
    ==Structure of cluster is hard-coded in this script to use 3 HA Master nodes, and 9 Worker nodes.==
    ==Kubernetes context is hard-coded in this script to use the `c1` name.==
+
+   If you get an error like `iptables-restore/1.8.7 Failed to initialize nft: Protocol not supported` then you need to switch to a prior kernel
+   Use this as a guide - (https://bugs.launchpad.net/ubuntu/+source/linux-raspi/+bug/1962053/comments/21)[https://bugs.launchpad.net/ubuntu/+source/linux-raspi/+bug/1962053/comments/21]
+
+   If you are redeploying an existing node, and you get an error during agent startup like `Waiting to retrieve agent configuration; server is not ready: Node password rejected, duplicate hostname or contents of '/etc/rancher/node/password' may not match server node-passwd entry, try enabling a unique node name with the --with-node-id flag`, then you need to delete the old node password from kubernetes:
+   > kubectl -n kube-system delete secrets <agent-node-name>.node-password.k3s   # agent-node-name is something like c01w04
+
+   Kubernetes / K3S will automatically recreate the node secret
    <br/>
 
 3. **`cluster-setup_dns.sh`** - Run this script with no arguments, to add DNS entries locally and on worker nodes.
@@ -199,6 +207,8 @@ Scripts for small fixes
     > ./cluster-setup_jobs.sh buildLifeboat
 
    <br/>
+
+12. **Install Kubeflow** - Kubeflow is an MLOps platform for managing the lifecycle of AI projects.  Since we are installing on Rasperry Pis (ARM vs x86) and in K3s (vs K8s), we are going to need to install each component manually.
 
 
 ## Notes, links, and useful commands

@@ -1,0 +1,2 @@
+dtoverlay=disable-wifi
+dtoverlay=disable-bt

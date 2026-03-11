@@ -74,10 +74,14 @@ addURLToAllClusterNodes c01w12 10.0.1.21
 
 addURL registry.cc.local 10.0.1.10
 
-addURLToLocal aiagent01.cc.local 10.0.1.10
-addURLToLocal aiagent02.cc.local 10.0.1.10
-addURLToLocal aiagent03.cc.local 10.0.1.10
-addURLToLocal aiagent04.cc.local 10.0.1.10
+addURLToLocal api.aiagent01.cc.local 10.0.1.10
+addURLToLocal chat.aiagent01.cc.local 10.0.1.10
+addURLToLocal api.aiagent02.cc.local 10.0.1.10
+addURLToLocal chat.aiagent02.cc.local 10.0.1.10
+addURLToLocal api.aiagent03.cc.local 10.0.1.10
+addURLToLocal chat.aiagent03.cc.local 10.0.1.10
+addURLToLocal api.aiagent04.cc.local 10.0.1.10
+addURLToLocal chat.aiagent04.cc.local 10.0.1.10
 
 
 

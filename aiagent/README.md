@@ -1,8 +1,66 @@
 
 ## Overview
 
-We are building a series of Local LLM containers that we can use to run different model architectures.  The first container is focused on the [llama.cpp](https://github.com/ggerganov/llama.cpp) design, as it supports a variety of quantized models that will run on a Raspberry Pi.  Daily, there are new models and techniques being released, and this folder will be a collection of container builds that support running them on a Kubernetes cluster.  All containers will expose an OpenAI API-compliant endpoint, so we should be able to leverage many frontends and libraries for interacting with these AI models, as backends.
+We are building a series of Local LLM containers that we can use to run different model architectures.  We are going to use [ollama](https://hub.docker.com/r/ollama/ollama) and [Open WebUI](https://docs.openwebui.com/)
+Since we are loading pre-built images into our private docker registry, we will need to check the registry using the [Docker Registry API](https://github.com/openshift/docker-distribution/blob/main/docs/spec/api.md)
 
+## Downloading / Uploading docker images
+
+We need to download ollama and Open WebUI from DockerHub, and specifically the `linux/arm64` platform architecture, and then we want to upload those images to our private docker registry.
+
+1. Login to the private docker registry, deployed in Kubernetes
+```
+export DR_PASSWORD=$(kubectl get secret -n default docker-registry-secret -o jsonpath="{.data.haSharedSecret}" | base64 -d; echo)
+docker login -u admin -p $DR_PASSWORD registry.cc.local
+```
+
+2. Use the following steps to download and upload `ollama`:
+```
+docker image pull ollama/ollama:latest --platform linux/arm64
+docker image tag ollama/ollama:latest registry.cc.local/coincatcher/ollama:latest
+docker image push registry.cc.local/coincatcher/ollama:latest
+```
+
+3. Check that the `linux/arm64` image is in the private docker registry, run the following commands:
+```
+export DR_PASSWORD=$(kubectl get secret -n default docker-registry-secret -o jsonpath="{.data.haSharedSecret}" | base64 -d; echo)
+curl https://admin:$DR_PASSWORD@registry.cc.local/v2/coincatcher/ollama/manifests/latest
+```
+
+4. Use the following steps to download and upload `Open WebUI`:
+```
+docker image pull ghcr.io/open-webui/open-webui:main --platform linux/arm64
+docker image tag ghcr.io/open-webui/open-webui:main registry.cc.local/coincatcher/open-webui:latest
+docker image push registry.cc.local/coincatcher/open-webui:latest
+```
+
+5. Check that the `linux/arm64` image is in the private docker registry, run the following commands:
+```
+export DR_PASSWORD=$(kubectl get secret -n default docker-registry-secret -o jsonpath="{.data.haSharedSecret}" | base64 -d; echo)
+curl https://admin:$DR_PASSWORD@registry.cc.local/v2/coincatcher/open-webui/manifests/latest
+```
+
+## Deploying AI Agents to the cluster
+
+The `kubernetes` folder contains the configuration we need to deploy 4 AI Agents onto the cluster.  These AI Agents are configured to always deploy to specific nodes on the cluster and they use the local hard-drive for accessing AI models and reading personas / prompts.  Change these configurations as needed.
+
+To deploy these AI Agents, we will execute the following steps:
+
+**1. `aiagent-llama-pv+pvc.yml`** - Use this to create the local data storage for each AI Agent.  This will create that PersistentVolumes and PersistentVolumeClaims used be each of the 4 AI Agents,  on each of their designated worker nodes. You can apply this config using the following:
+   > kubectl apply -f aiagent-llama-pv+pvc.yml
+   
+**2. `aiagent-llama-deploy.yml`** - Use this to create a Deployment spec and a Network service for each AI Agent.  Each AI Agent will bind to their designated worker nodes, by using the `nodeSelector` attribute. Each AI Agent in this file is configured to load a specfic LLM, so you will need to change these before deployment if you are testing different models. You can apply this config using the following:
+   > kubectl apply -f aiagent-llama-deploy.yml
+   
+**3. `aiagent-llama-ingress.yml`** - Use this to create the external network access and URL for each AI Agent. You can apply this config using the following:
+   > kubectl apply -f aiagent-llama-ingress.yml
+
+
+
+
+
+
+# OLD - TO BE DELETED
 The current llama-based container looks like this, internally:
 <img src="../docs/aiagent_components.png" height="300px">
 

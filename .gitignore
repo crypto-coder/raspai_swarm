@@ -166,3 +166,5 @@ worker/*.xz
 worker/*.img
 cluster/certs/ca
 cluster/certs/*/*
+models/*/*
+_BACKUP/

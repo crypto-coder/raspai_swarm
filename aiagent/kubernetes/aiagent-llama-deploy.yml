@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: aiagent01
-        image: registry.cc.local/coincatcher/aiagent-llama:latest
+        image: registry.cc.local/coincatcher/ollama:latest
         env:
           - name: MODEL
             value: "/app/models/openchat_3.5/openchat_3.5.Q4_K_M.gguf"

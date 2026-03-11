@@ -18,6 +18,7 @@ The AI Leader is based on [Autogen](https://github.com/microsoft/autogen) and it
 
     ```
     docker run -it --name localllm -d -v ../models:/app/models -e n_threads=6 -e n_ctx=4096 -e MODEL=/app/models/openchat_3.5/openchat_3.5.Q4_K_M.gguf -p 9080:8080 registry.cc.local/coincatcher/aiagent-llama:latest
+    docker run -it --name localllm -d -v $PWD/models:/app/models -e n_threads=6 -e n_ctx=3072 -e MODEL=/app/models/mixtral-8x7b-v0.1/mixtral-8x7b-v0.1.Q4_K_M.gguf -p 9080:8080 registry.cc.local/coincatcher/aiagent-llama:latest
     ```
 
 2. Start the `main.py` script
